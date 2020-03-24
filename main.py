@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os
+import random
 import pygame as pg
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
@@ -50,8 +51,14 @@ def main():
     bullet_image = load_image('bullet.png')
     bullet_image = pg.transform.scale(bullet_image, (10, 20))
 
-    bullets = []
+    enemie_images = ['becker.png', 'erika.png']
+    for index, img in enumerate(enemie_images):
+        _img = load_image(img)
+        _img = pg.transform.scale(_img, (50, 50))
+        enemie_images[index] = _img
 
+    bullets = []
+    enemies = []
 
     player = ImageElement(
         image=player_image,
@@ -86,12 +93,26 @@ def main():
 
         screen.blit(player.image, player.pos)
 
+        if (len(enemies) <= 2):
+            enemie_img = enemie_images[random.randint(0, len(enemie_images) - 1)]
+            enemie = ImageElement(
+                image=enemie_img,
+                speed=1,
+                top=0,
+                left=random.randint(0, (GAME_WIDTH - enemie_img.get_width()))
+            )
+            enemies.append(enemie)
+
+        for enemie in enemies:
+            enemie.move_down()
+            screen.blit(enemie.image, enemie.pos)
+
         for bullet in bullets:
             bullet.move_up()
             screen.blit(bullet.image, bullet.pos)
 
         pg.display.update()
-        clock.tick(60)
+        clock.tick(30)
 
 
 if __name__ == "__main__":

@@ -6,22 +6,30 @@ main_dir = os.path.split(os.path.abspath(__file__))[0]
 GAME_WIDTH = 500
 GAME_HEIGHT = 500
 
-class GameObject:
-    def __init__(self, image, top, left):
-        self.image = image
-        self.pos = image.get_rect().move(top, left)
+
+class Element:
+    def __init__(self, speed, top, left):
+        self.speed = speed
+        self.top = top
+        self.left = left
 
     def up(self):
-        self.pos = self.pos.move(0, -1)
+        self.pos = self.pos.move(0, -1*self.speed)
 
     def down(self):
-        self.pos = self.pos.move(0, 1)
+        self.pos = self.pos.move(0, 1*self.speed)
 
     def left(self):
-        self.pos = self.pos.move(-1, 0)
+        self.pos = self.pos.move((-1*self.speed), 0)
 
     def right(self):
-        self.pos = self.pos.move(1, 0)
+        self.pos = self.pos.move(1*self.speed, 0)
+
+class ImageElement(Element):
+    def __init__(self, speed, image, top, left):
+        super().__init__(speed, top, left)
+        self.image = image
+        self.pos = image.get_rect().move(left, top)
 
 
 # quick function to load an image
@@ -39,13 +47,25 @@ def main():
 
     player_image = load_image('stromberg.png')
     player_image = pg.transform.scale(player_image, (80, 80))
-    player = GameObject(player_image, 0, (GAME_HEIGHT - player_image.get_width()))
+    bullet_image = load_image('bullet.png')
+    bullet_image = pg.transform.scale(bullet_image, (10, 20))
+
+    bullets = []
+
+
+    player = ImageElement(
+        image=player_image,
+        speed=10,
+        top=(GAME_HEIGHT - player_image.get_width()),
+        left=0
+    )
+
 
     while 1:
         screen.fill((255, 0, 0))
 
         for event in pg.event.get():
-            if event.type == pg.KEYDOWN or event.type == pg.KEYUP:
+            if event.type == pg.KEYDOWN:
                 key = event.__dict__['key']
                 if key == 273:
                     player.up()
@@ -56,9 +76,20 @@ def main():
                 elif key == 276:
                     player.left()
                 elif key == 32:
-                    print('space')
+                    bullet = ImageElement(
+                        image=bullet_image,
+                        speed=10,
+                        top=(GAME_HEIGHT - bullet_image.get_width()),
+                        left=0
+                    )
+                    bullets.append(bullet)
 
         screen.blit(player.image, player.pos)
+
+        for bullet in bullets:
+            bullet.up()
+            screen.blit(bullet.image, bullet.pos)
+
         pg.display.update()
         clock.tick(60)
 

@@ -13,16 +13,16 @@ class Element:
         self.top = top
         self.left = left
 
-    def up(self):
+    def move_up(self):
         self.pos = self.pos.move(0, -1*self.speed)
 
-    def down(self):
+    def move_down(self):
         self.pos = self.pos.move(0, 1*self.speed)
 
-    def left(self):
+    def move_left(self):
         self.pos = self.pos.move((-1*self.speed), 0)
 
-    def right(self):
+    def move_right(self):
         self.pos = self.pos.move(1*self.speed, 0)
 
 class ImageElement(Element):
@@ -68,26 +68,26 @@ def main():
             if event.type == pg.KEYDOWN:
                 key = event.__dict__['key']
                 if key == 273:
-                    player.up()
+                    player.move_up()
                 elif key == 274:
-                    player.down()
+                    player.move_down()
                 elif key == 275:
-                    player.right()
+                    player.move_right()
                 elif key == 276:
-                    player.left()
+                    player.move_left()
                 elif key == 32:
                     bullet = ImageElement(
                         image=bullet_image,
                         speed=10,
                         top=(GAME_HEIGHT - bullet_image.get_width()),
-                        left=0
+                        left=(player.pos[0] + (player_image.get_width() / 2) - (bullet_image.get_width() / 2))
                     )
                     bullets.append(bullet)
 
         screen.blit(player.image, player.pos)
 
         for bullet in bullets:
-            bullet.up()
+            bullet.move_up()
             screen.blit(bullet.image, bullet.pos)
 
         pg.display.update()

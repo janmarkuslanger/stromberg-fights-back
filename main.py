@@ -114,6 +114,7 @@ def main():
             for enemie in enemies:
                 if enemie.pos.colliderect(bullet.pos):
                     enemies.remove(enemie)
+                    bullets.remove(bullet)
 
             screen.blit(bullet.image, bullet.pos)
 

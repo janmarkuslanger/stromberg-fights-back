@@ -30,14 +30,13 @@ class ImageElement(Element):
     def __init__(self, speed, image, top, left):
         super().__init__(speed, top, left)
         self.image = image
-        self.pos = image.get_rect().move(left, top)
+        self.pos = self.image.get_rect().move(left, top)
 
 
 # quick function to load an image
 def load_image(name):
     path = os.path.join(main_dir, '', name)
     return pg.image.load(path).convert()
-
 
 # here's the full code
 def main():
@@ -72,6 +71,8 @@ def main():
         screen.fill((255, 0, 0))
 
         for event in pg.event.get():
+            if event.type == pg.QUIT:
+                return
             if event.type == pg.KEYDOWN:
                 key = event.__dict__['key']
                 if key == 273:
@@ -109,6 +110,11 @@ def main():
 
         for bullet in bullets:
             bullet.move_up()
+
+            for enemie in enemies:
+                if enemie.pos.colliderect(bullet.pos):
+                    enemies.remove(enemie)
+
             screen.blit(bullet.image, bullet.pos)
 
         pg.display.update()

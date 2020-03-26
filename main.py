@@ -50,8 +50,7 @@ def main():
 
     # init player alias stromberg
     # 304 x 380
-    player_image = load_image('stromberg.png').convert_alpha()
-    player_image = pg.transform.scale(player_image, (76, 95))
+    player_image = load_image('stromberg.png')
 
     bullet_image = load_image('bullet.png')
     bullet_image = pg.transform.scale(bullet_image, (10, 20))
@@ -84,11 +83,7 @@ def main():
                 return
             if event.type == pg.KEYDOWN:
                 key = event.__dict__['key']
-                if key == 273:
-                    player.move_up()
-                elif key == 274:
-                    player.move_down()
-                elif key == 275:
+                if key == 275:
                     player.move_right()
                 elif key == 276:
                     player.move_left()

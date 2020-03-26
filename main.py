@@ -52,10 +52,10 @@ def main():
     # 304 x 380
     player_image = load_image('stromberg.png')
 
-    bullet_image = load_image('bullet.png')
+    bullet_image = load_image('aktenordner.png')
     bullet_image = pg.transform.scale(bullet_image, (10, 20))
 
-    enemie_images = ['becker.png', 'erika.png']
+    enemie_images = ['becker.png', 'erika.png', 'frau-nangwasongwa.png', 'tukulu.png']
     for index, img in enumerate(enemie_images):
         _img = load_image(img)
         _img = pg.transform.scale(_img, (50, 50))

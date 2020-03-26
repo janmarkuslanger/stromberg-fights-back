@@ -91,8 +91,8 @@ def main():
                     bullet = ImageElement(
                         image=bullet_image,
                         speed=10,
-                        top=(GAME_HEIGHT - bullet_image.get_width()),
-                        left=(player.pos[0] + (player_image.get_width() / 2) - (bullet_image.get_width() / 2))
+                        top=(GAME_HEIGHT - player_image.get_height()),
+                        left=(player.pos[0] + player_image.get_width())
                     )
                     bullets.append(bullet)
 

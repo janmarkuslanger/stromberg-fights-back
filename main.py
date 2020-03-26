@@ -67,7 +67,7 @@ def main():
     player = ImageElement(
         image=player_image,
         speed=10,
-        top=(GAME_HEIGHT - player_image.get_width()),
+        top=(GAME_HEIGHT - player_image.get_height()),
         left=0
     )
 

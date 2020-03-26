@@ -26,6 +26,7 @@ class Element:
     def move_right(self):
         self.pos = self.pos.move(1*self.speed, 0)
 
+
 class ImageElement(Element):
     def __init__(self, speed, image, top, left):
         super().__init__(speed, top, left)
@@ -36,17 +37,22 @@ class ImageElement(Element):
 # quick function to load an image
 def load_image(name):
     path = os.path.join(main_dir, '', name)
-    return pg.image.load(path).convert()
+    return pg.image.load(path).convert_alpha()
 
 # here's the full code
 def main():
     pg.init()
+    font = pg.font.Font(None, 25)
     clock = pg.time.Clock()
     screen = pg.display.set_mode((GAME_WIDTH, GAME_HEIGHT))
     screen.fill((255, 255, 255))
+    score = 0
 
-    player_image = load_image('stromberg.png')
-    player_image = pg.transform.scale(player_image, (80, 80))
+    # init player alias stromberg
+    # 304 x 380
+    player_image = load_image('stromberg.png').convert_alpha()
+    player_image = pg.transform.scale(player_image, (76, 95))
+
     bullet_image = load_image('bullet.png')
     bullet_image = pg.transform.scale(bullet_image, (10, 20))
 
@@ -69,6 +75,9 @@ def main():
 
     while 1:
         screen.fill((255, 0, 0))
+
+        text = font.render('Score: ' + str(score), 1, (0,0,0))
+        screen.blit(text, (390, 10))
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -115,6 +124,7 @@ def main():
                 if enemie.pos.colliderect(bullet.pos):
                     enemies.remove(enemie)
                     bullets.remove(bullet)
+                    score += 1
 
             screen.blit(bullet.image, bullet.pos)
 

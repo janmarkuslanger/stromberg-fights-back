@@ -48,6 +48,10 @@ def main():
     screen.fill((255, 255, 255))
     score = 0
 
+    # load background image
+    background_image = load_image('office-capitol.png')
+    background_image = pg.transform.scale(background_image, (GAME_WIDTH, GAME_HEIGHT))
+
     # init player alias stromberg
     # 304 x 380
     player_image = load_image('stromberg.png')
@@ -73,7 +77,8 @@ def main():
 
 
     while 1:
-        screen.fill((255, 0, 0))
+        screen.fill((255, 255, 255))
+        screen.blit(background_image, (0,0))
 
         text = font.render('Score: ' + str(score), 1, (0,0,0))
         screen.blit(text, (390, 10))

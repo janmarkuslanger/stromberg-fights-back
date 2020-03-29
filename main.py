@@ -93,7 +93,7 @@ def main():
     score = 0
     level = 0
 
-    if (CONFIG[level]['score'] >= score and level < len(CONFIG)):
+    if (CONFIG[level]['score'] <= score and level < len(CONFIG)):
         # raise level if score is high enough
         level += 1
 
@@ -133,6 +133,11 @@ def main():
 
     while run:
         clock.tick(60)
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                return
+
         screen.blit(background_image, (0,0))
 
         text = font.render('Score: ' + str(score), 1, (0,0,0))
@@ -155,10 +160,6 @@ def main():
             )
             bullets.append(bullet)
 
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                return
-    
         screen.blit(player.image, player.pos)
 
         if score % 600 == 0:
@@ -166,7 +167,7 @@ def main():
             egg_image = egg_images[egg_image_index]
             egg = ImageElement(
                 image=egg_image,
-                speed=20,
+                speed=10,
                 top=0,
                 left=random.randint(0, (GAME_WIDTH - egg_image.get_width()))
             )
@@ -185,8 +186,8 @@ def main():
 
         for enemie in enemies:
             enemie.move_down()
-            # if enemie.out_of_range():
-            #     pass
+            if enemie.out_of_range():
+                run = False
             screen.blit(enemie.image, enemie.pos)
 
         for egg in eggs:
@@ -194,12 +195,17 @@ def main():
             screen.blit(egg.image, egg.pos)
 
         for bullet in bullets:
+            if bullet.out_of_range():
+                bullets.remove(bullet)
             bullet.move_up()
 
             for enemie in enemies:
                 if enemie.pos.colliderect(bullet.pos):
                     enemies.remove(enemie)
-                    bullets.remove(bullet)
+
+                    if bullet in bullets:
+                        bullets.remove(bullet)
+
                     score += 1
 
             screen.blit(bullet.image, bullet.pos)
@@ -208,7 +214,28 @@ def main():
         score += 1
 
     else:
-        print('sdfsd')
+        run_after = True
+        screen.fill((255, 255, 255))
+
+        text = font.render('Highscore: ' + str(score), 1, (0,0,0))
+        screen.blit(text, (10, 10))
+
+        text = font.render('ESC zum schließen | Space zum neustart' , 1, (0,0,0))
+        screen.blit(text, (10, 40))
+
+        pg.display.update()
+
+        while run_after:
+            events = pg.event.get()
+
+            pressed = pg.key.get_pressed()
+
+            if pressed[27]:
+                run_after = False
+
+            if pressed[32]:
+                run_after = False
+                main()
 
 
 if __name__ == "__main__":

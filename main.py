@@ -114,8 +114,14 @@ def main():
         _img = pg.transform.scale(_img, (50, 50))
         enemie_images[index] = _img
 
+    egg_images = ['egg-one.png', 'egg-two.png', 'egg-three.png']
+    for index, img in enumerate(egg_images):
+        _img = load_image(img)
+        egg_images[index] = _img
+
     bullets = []
     enemies = []
+    eggs = []
 
     player = ImageElement(
         image=player_image,
@@ -132,25 +138,39 @@ def main():
         text = font.render('Score: ' + str(score), 1, (0,0,0))
         screen.blit(text, (390, 10))
 
+        pressed = pg.key.get_pressed()
+
+        if pressed[275]:
+            player.move_right()
+
+        if pressed[276]:
+            player.move_left()
+
+        if pressed[32]:
+            bullet = ImageElement(
+                image=bullet_image,
+                speed=10,
+                top=(GAME_HEIGHT - player_image.get_height()),
+                left=(player.pos[0] + player_image.get_width())
+            )
+            bullets.append(bullet)
+
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 return
-            if event.type == pg.KEYDOWN:
-                key = event.__dict__['key']
-                if key == 275:
-                    player.move_right()
-                elif key == 276:
-                    player.move_left()
-                elif key == 32:
-                    bullet = ImageElement(
-                        image=bullet_image,
-                        speed=10,
-                        top=(GAME_HEIGHT - player_image.get_height()),
-                        left=(player.pos[0] + player_image.get_width())
-                    )
-                    bullets.append(bullet)
-
+    
         screen.blit(player.image, player.pos)
+
+        if score % 600 == 0:
+            egg_image_index = random.randint(0, len(egg_images) - 1)
+            egg_image = egg_images[egg_image_index]
+            egg = ImageElement(
+                image=egg_image,
+                speed=20,
+                top=0,
+                left=random.randint(0, (GAME_WIDTH - egg_image.get_width()))
+            )
+            eggs.append(egg)
 
         if (len(enemies) <= CONFIG[level]['enemie_count']):
             enemie_img = enemie_images[random.randint(0, len(enemie_images) - 1)]
@@ -168,6 +188,10 @@ def main():
             # if enemie.out_of_range():
             #     pass
             screen.blit(enemie.image, enemie.pos)
+
+        for egg in eggs:
+            egg.move_down()
+            screen.blit(egg.image, egg.pos)
 
         for bullet in bullets:
             bullet.move_up()

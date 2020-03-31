@@ -111,7 +111,7 @@ def main():
     enemie_images = ['becker.png', 'erika.png', 'frau-nangwasongwa.png', 'tukulu.png']
     for index, img in enumerate(enemie_images):
         _img = load_image(img)
-        _img = pg.transform.scale(_img, (50, 50))
+        # _img = pg.transform.scale(_img, (50, 50))
         enemie_images[index] = _img
 
     egg_images = ['egg-one.png', 'egg-two.png', 'egg-three.png']

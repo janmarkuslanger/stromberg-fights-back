@@ -76,7 +76,8 @@ class ImageElement(Element):
 
 # quick function to load an image
 def load_image(name):
-    path = os.path.join(main_dir, '', name)
+    path = os.path.join(main_dir, '../assets/', name)
+    print(path)
     return pg.image.load(path).convert_alpha()
 
 # here's the full code

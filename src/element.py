@@ -18,3 +18,6 @@ class Element:
 
     def move_right(self) -> None:
         self.pos = self.pos.move(1*self.speed, 0)
+
+    def collides_element(self, element) -> bool:
+        return self.pos.colliderect(element.pos)

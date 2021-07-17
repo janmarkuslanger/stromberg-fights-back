@@ -6,7 +6,6 @@ from game import Game
 from element import Element
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
-
 game = Game(width=600, height=600)
 
 CONFIG = (
@@ -140,7 +139,7 @@ def main():
             bullet.move_up()
 
             for enemie in enemies:
-                if enemie.pos.colliderect(bullet.pos):
+                if enemie.collides_element(bullet):
                     enemies.remove(enemie)
 
                     if bullet in bullets:

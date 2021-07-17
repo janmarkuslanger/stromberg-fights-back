@@ -4,6 +4,7 @@ import random
 import pygame as pg
 from game import Game
 from element import Element
+from game_state import GAME_STATE
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 game = Game(width=600, height=600)
@@ -42,7 +43,8 @@ def load_image(name):
 
 # here's the full code
 def main():
-    run = True
+    current_state = GAME_STATE.PLAYING
+
     pg.init()
     font = pg.font.Font(None, 25)
     clock = pg.time.Clock()
@@ -53,6 +55,8 @@ def main():
     # setup game vars
     score = 0
     level = 0
+    bullets = []
+    enemies = []
 
     if (CONFIG[level]['score'] <= score and level < len(CONFIG)):
         # raise level if score is high enough
@@ -74,8 +78,7 @@ def main():
         _img = load_image(img)
         enemie_images[index] = _img
 
-    bullets = []
-    enemies = []
+    
 
     player = Element(
         image=player_image,
@@ -85,94 +88,96 @@ def main():
     )
 
 
-    while run:
+    while 1:
         clock.tick(60)
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 return
 
-        screen.blit(background_image, (0,0))
+        if current_state == GAME_STATE.PLAYING:
+            screen.blit(background_image, (0,0))
 
-        text = font.render('Score: ' + str(score), 1, (0,0,0))
-        screen.blit(text, (390, 10))
+            text = font.render('Score: ' + str(score), 1, (0,0,0))
+            screen.blit(text, (390, 10))
 
-        pressed = pg.key.get_pressed()
+            pressed = pg.key.get_pressed()
 
-        if pressed[pg.K_RIGHT]:
-            player.move_right()
+            if pressed[pg.K_RIGHT]:
+                player.move_right()
 
-        if pressed[pg.K_LEFT]:
-            player.move_left()
+            if pressed[pg.K_LEFT]:
+                player.move_left()
 
-        if pressed[pg.K_SPACE]:
-            bullet = Element(
-                image=bullet_image,
-                speed=10,
-                top=(game.height - player_image.get_height()),
-                left=(player.pos[0] + player_image.get_width())
-            )
-            bullets.append(bullet)
+            if pressed[pg.K_SPACE]:
+                bullet = Element(
+                    image=bullet_image,
+                    speed=10,
+                    top=(game.height - player_image.get_height()),
+                    left=(player.pos[0] + player_image.get_width())
+                )
+                bullets.append(bullet)
 
-        screen.blit(player.image, player.pos)
+            screen.blit(player.image, player.pos)
 
-        if (len(enemies) <= CONFIG[level]['enemie_count']):
-            enemie_img = enemie_images[random.randint(0, len(enemie_images) - 1)]
-            enemie_speed = CONFIG[level]['enemie_speed']
-            enemie = Element(
-                image=enemie_img,   
-                speed=enemie_speed,
-                top=0,
-                left=random.randint(0, (game.width - enemie_img.get_width()))
-            )
-            enemies.append(enemie)
+            if (len(enemies) <= CONFIG[level]['enemie_count']):
+                enemie_img = enemie_images[random.randint(0, len(enemie_images) - 1)]
+                enemie_speed = CONFIG[level]['enemie_speed']
+                enemie = Element(
+                    image=enemie_img,   
+                    speed=enemie_speed,
+                    top=0,
+                    left=random.randint(0, (game.width - enemie_img.get_width()))
+                )
+                enemies.append(enemie)
 
-        for enemy in enemies:
-            enemy.move_down()
-            if game.is_element_not_in_range(enemy):
-                run = False
-            screen.blit(enemy.image, enemy.pos)
+            for enemy in enemies:
+                enemy.move_down()
+                if game.is_element_not_in_range(enemy):
+                    current_state = GAME_STATE.PAUSED
+                screen.blit(enemy.image, enemy.pos)
 
-        for bullet in bullets:
-            if game.is_element_not_in_range(bullet):
-                bullets.remove(bullet)
-            bullet.move_up()
+            for bullet in bullets:
+                if game.is_element_not_in_range(bullet):
+                    bullets.remove(bullet)
+                bullet.move_up()
 
-            for enemie in enemies:
-                if enemie.collides_element(bullet):
-                    enemies.remove(enemie)
+                for enemie in enemies:
+                    if enemie.collides_element(bullet):
+                        enemies.remove(enemie)
 
-                    if bullet in bullets:
-                        bullets.remove(bullet)
+                        if bullet in bullets:
+                            bullets.remove(bullet)
 
-                    score += 1
+                        score += 1
 
-            screen.blit(bullet.image, bullet.pos)
-        pg.display.update()
+                screen.blit(bullet.image, bullet.pos)
+            pg.display.update()
 
-        score += 1
+            score += 1
 
-    else:
-        run_after = True
-        screen.fill((255, 255, 255))
+        else:
+            screen.fill((255, 255, 255))
 
-        text = font.render('Highscore: ' + str(score), 1, (0,0,0))
-        screen.blit(text, (10, 10))
+            text = font.render('Highscore: ' + str(score), 1, (0,0,0))
+            screen.blit(text, (10, 10))
 
-        text = font.render('ESC zum schließen | Space zum neustart' , 1, (0,0,0))
-        screen.blit(text, (10, 40))
+            text = font.render('ESC zum schließen | Space zum neustart' , 1, (0,0,0))
+            screen.blit(text, (10, 40))
 
-        pg.display.update()
+            pg.display.update()
 
-        while run_after:
             pressed = pg.key.get_pressed()
 
             if pressed[pg.K_ESCAPE]:
-                run_after = False
+                return
 
             if pressed[pg.K_SPACE]:
-                run_after = False
-                main()
+                score = 0
+                level = 0
+                bullets = []
+                enemies = []
+                current_state = GAME_STATE.PLAYING
 
 
 if __name__ == "__main__":

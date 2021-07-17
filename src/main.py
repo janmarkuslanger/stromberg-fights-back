@@ -77,7 +77,6 @@ class ImageElement(Element):
 # quick function to load an image
 def load_image(name):
     path = os.path.join(main_dir, '../assets/', name)
-    print(path)
     return pg.image.load(path).convert_alpha()
 
 # here's the full code
@@ -140,10 +139,10 @@ def main():
 
         pressed = pg.key.get_pressed()
 
-        if pressed[275]:
+        if pressed[pg.K_RIGHT]:
             player.move_right()
 
-        if pressed[276]:
+        if pressed[pg.K_LEFT]:
             player.move_left()
 
         if pressed[32]:

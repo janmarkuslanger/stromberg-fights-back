@@ -114,14 +114,8 @@ def main():
         # _img = pg.transform.scale(_img, (50, 50))
         enemie_images[index] = _img
 
-    egg_images = ['egg-one.png', 'egg-two.png', 'egg-three.png']
-    for index, img in enumerate(egg_images):
-        _img = load_image(img)
-        egg_images[index] = _img
-
     bullets = []
     enemies = []
-    eggs = []
 
     player = ImageElement(
         image=player_image,
@@ -162,22 +156,11 @@ def main():
 
         screen.blit(player.image, player.pos)
 
-        if score % 600 == 0:
-            egg_image_index = random.randint(0, len(egg_images) - 1)
-            egg_image = egg_images[egg_image_index]
-            egg = ImageElement(
-                image=egg_image,
-                speed=10,
-                top=0,
-                left=random.randint(0, (GAME_WIDTH - egg_image.get_width()))
-            )
-            eggs.append(egg)
-
         if (len(enemies) <= CONFIG[level]['enemie_count']):
             enemie_img = enemie_images[random.randint(0, len(enemie_images) - 1)]
             enemie_speed = CONFIG[level]['enemie_speed']
             enemie = ImageElement(
-                image=enemie_img,
+                image=enemie_img,   
                 speed=enemie_speed,
                 top=0,
                 left=random.randint(0, (GAME_WIDTH - enemie_img.get_width()))
@@ -189,10 +172,6 @@ def main():
             if enemie.out_of_range():
                 run = False
             screen.blit(enemie.image, enemie.pos)
-
-        for egg in eggs:
-            egg.move_down()
-            screen.blit(egg.image, egg.pos)
 
         for bullet in bullets:
             if bullet.out_of_range():
@@ -226,8 +205,6 @@ def main():
         pg.display.update()
 
         while run_after:
-            events = pg.event.get()
-
             pressed = pg.key.get_pressed()
 
             if pressed[27]:

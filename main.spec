@@ -1,13 +1,15 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import os
+cwd = os.getcwd()
 
 block_cipher = None
 
 
 a = Analysis(['src/main.py'],
-             pathex=['/Users/jan-markus.langer/Documents/stromberg-fights-back'],
+             pathex=[cwd],
              binaries=[],
-             datas=[],
+             datas=[('assets', 'assets')],
              hiddenimports=[],
              hookspath=[],
              hooksconfig={},
@@ -24,7 +26,7 @@ exe = EXE(pyz,
           a.scripts, 
           [],
           exclude_binaries=True,
-          name='main',
+          name='Stromberg kämpft zurück',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,

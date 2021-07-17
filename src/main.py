@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os
+import sys
 import random
 import pygame as pg
 from game import Game
@@ -8,6 +9,9 @@ from game_state import GAME_STATE
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 game = Game(width=600, height=600)
+
+if getattr(sys, 'frozen', False):
+    os.chdir(sys._MEIPASS)
 
 CONFIG = (
     {
@@ -37,7 +41,10 @@ CONFIG = (
 
 
 def load_image(name):
-    path = os.path.join(main_dir, '../assets/', name)
+    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+        path = os.path.join(main_dir, '../../assets/', name)
+    else:
+        path = os.path.join(main_dir, '../assets/', name)
     return pg.image.load(path).convert_alpha()
     
 
@@ -45,7 +52,7 @@ def main():
     current_state = GAME_STATE.PLAYING
 
     pg.init()
-    font = pg.font.Font(None, 25)
+    #font = pg.font.Font(None, 25)
     clock = pg.time.Clock()
     screen = pg.display.set_mode((game.width, game.height))
     game_area = pg.Rect(0, 0, game.width, game.height)
@@ -100,8 +107,8 @@ def main():
 
             screen.blit(background_image, (0,0))
 
-            text = font.render('Score: ' + str(score), 1, (0,0,0))
-            screen.blit(text, (390, 10))
+            # text = font.render('Score: ' + str(score), 1, (0,0,0))
+            # screen.blit(text, (390, 10))
 
             pressed = pg.key.get_pressed()
 
@@ -161,11 +168,11 @@ def main():
         else:
             screen.fill((255, 255, 255))
 
-            text = font.render('Highscore: ' + str(score), 1, (0,0,0))
-            screen.blit(text, (10, 10))
+            # text = font.render('Highscore: ' + str(score), 1, (0,0,0))
+            # screen.blit(text, (10, 10))
 
-            text = font.render('ESC zum schließen | Space zum neustart' , 1, (0,0,0))
-            screen.blit(text, (10, 40))
+            # text = font.render('ESC zum schließen | Space zum neustart' , 1, (0,0,0))
+            # screen.blit(text, (10, 40))
 
             pg.display.update()
 

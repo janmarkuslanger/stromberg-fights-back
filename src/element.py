@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 class Element:
-    def __init__(self, speed: int, top: int, left: int) -> None:
+    def __init__(self, speed: int, top: int, left: int, image) -> None:
         self.speed = speed
         self.top = top
         self.left = left
-        self.pos = None
+        self.image = image
+        self.pos = self.image.get_rect().move(left, top)
 
     def move_up(self) -> None:
         self.pos = self.pos.move(0, -1*self.speed)

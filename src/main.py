@@ -36,12 +36,6 @@ CONFIG = (
 )
 
 
-class ImageElement(Element):
-    def __init__(self, speed, image, top, left):
-        super().__init__(speed, top, left)
-        self.image = image
-        self.pos = self.image.get_rect().move(left, top)
-
 # quick function to load an image
 def load_image(name):
     path = os.path.join(main_dir, '../assets/', name)
@@ -84,7 +78,7 @@ def main():
     bullets = []
     enemies = []
 
-    player = ImageElement(
+    player = Element(
         image=player_image,
         speed=10,
         top=(game.height - player_image.get_height()),
@@ -113,7 +107,7 @@ def main():
             player.move_left()
 
         if pressed[pg.K_SPACE]:
-            bullet = ImageElement(
+            bullet = Element(
                 image=bullet_image,
                 speed=10,
                 top=(game.height - player_image.get_height()),
@@ -126,7 +120,7 @@ def main():
         if (len(enemies) <= CONFIG[level]['enemie_count']):
             enemie_img = enemie_images[random.randint(0, len(enemie_images) - 1)]
             enemie_speed = CONFIG[level]['enemie_speed']
-            enemie = ImageElement(
+            enemie = Element(
                 image=enemie_img,   
                 speed=enemie_speed,
                 top=0,

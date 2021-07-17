@@ -111,7 +111,6 @@ def main():
     enemie_images = ['becker.png', 'erika.png', 'frau-nangwasongwa.png', 'tukulu.png']
     for index, img in enumerate(enemie_images):
         _img = load_image(img)
-        # _img = pg.transform.scale(_img, (50, 50))
         enemie_images[index] = _img
 
     bullets = []
@@ -145,7 +144,7 @@ def main():
         if pressed[pg.K_LEFT]:
             player.move_left()
 
-        if pressed[32]:
+        if pressed[pg.K_SPACE]:
             bullet = ImageElement(
                 image=bullet_image,
                 speed=10,
@@ -207,10 +206,10 @@ def main():
         while run_after:
             pressed = pg.key.get_pressed()
 
-            if pressed[27]:
+            if pressed[pg.K_ESCAPE]:
                 run_after = False
 
-            if pressed[32]:
+            if pressed[pg.K_SPACE]:
                 run_after = False
                 main()
 

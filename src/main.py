@@ -11,37 +11,36 @@ game = Game(width=600, height=600)
 
 CONFIG = (
     {
-        'score': 100,
+        'score': 1000,
         'enemie_speed': 1,
         'enemie_count': 2
     },
     {
-        'score': 1000,
-        'enemie_speed': 2,
-        'enemie_count': 3
-    }, {
         'score': 3000,
-        'enemie_speed': 5,
+        'enemie_speed': 1.25,
         'enemie_count': 3
     }, {
-        'score': 5000,
-        'enemie_speed': 10,
+        'score': 8000,
+        'enemie_speed': 1.5,
+        'enemie_count': 3
+    }, {
+        'score': 16000,
+        'enemie_speed': 2,
         'enemie_count': 4
     },
     {
-        'score': 6000,
-        'enemie_speed': 16,
+        'score': 32000,
+        'enemie_speed': 4,
         'enemie_count': 4
     }
 )
 
 
-# quick function to load an image
 def load_image(name):
     path = os.path.join(main_dir, '../assets/', name)
     return pg.image.load(path).convert_alpha()
+    
 
-# here's the full code
 def main():
     current_state = GAME_STATE.PLAYING
 
@@ -57,10 +56,6 @@ def main():
     level = 0
     bullets = []
     enemies = []
-
-    if (CONFIG[level]['score'] <= score and level < len(CONFIG)):
-        # raise level if score is high enough
-        level += 1
 
     # load background image
     background_image = load_image('office-capitol.png')
@@ -95,7 +90,14 @@ def main():
             if event.type == pg.QUIT:
                 return
 
+        
+
         if current_state == GAME_STATE.PLAYING:
+            
+            if (CONFIG[level]['score'] <= score and level < len(CONFIG)):
+                # raise level if score is high enough
+                level += 1
+
             screen.blit(background_image, (0,0))
 
             text = font.render('Score: ' + str(score), 1, (0,0,0))
@@ -109,7 +111,7 @@ def main():
             if pressed[pg.K_LEFT]:
                 player.move_left()
 
-            if pressed[pg.K_SPACE]:
+            if pressed[pg.K_SPACE] and len(bullets) < 5:
                 bullet = Element(
                     image=bullet_image,
                     speed=10,

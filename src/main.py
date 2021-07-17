@@ -3,6 +3,7 @@ import os
 import random
 import pygame as pg
 from game import Game
+from element import Element
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 
@@ -33,40 +34,6 @@ CONFIG = (
         'enemie_count': 4
     }
 )
-
-
-class Element:
-    def __init__(self, speed, top, left):
-        self.speed = speed
-        self.top = top
-        self.left = left
-
-    def move_up(self):
-        self.pos = self.pos.move(0, -1*self.speed)
-
-    def move_down(self):
-        self.pos = self.pos.move(0, 1*self.speed)
-
-    def move_left(self):
-        self.pos = self.pos.move((-1*self.speed), 0)
-
-    def move_right(self):
-        self.pos = self.pos.move(1*self.speed, 0)
-
-    def out_of_range(self):
-        topside = (
-            self.pos.top < 0
-            or self.pos.bottom < 0
-            or self.pos.left < 0
-            or self.pos.right < 0
-        )
-
-        bottomside = (
-            self.pos.top > game.height
-        )
-
-        return (topside or bottomside)
-
 
 
 class ImageElement(Element):
@@ -167,14 +134,14 @@ def main():
             )
             enemies.append(enemie)
 
-        for enemie in enemies:
-            enemie.move_down()
-            if enemie.out_of_range():
+        for enemy in enemies:
+            enemy.move_down()
+            if game.is_element_not_in_range(enemy):
                 run = False
-            screen.blit(enemie.image, enemie.pos)
+            screen.blit(enemy.image, enemy.pos)
 
         for bullet in bullets:
-            if bullet.out_of_range():
+            if game.is_element_not_in_range(bullet):
                 bullets.remove(bullet)
             bullet.move_up()
 

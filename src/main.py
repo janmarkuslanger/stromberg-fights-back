@@ -2,10 +2,11 @@
 import os
 import random
 import pygame as pg
+from game import Game
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
-GAME_WIDTH = 600
-GAME_HEIGHT = 600
+
+game = Game(width=600, height=600)
 
 CONFIG = (
     {
@@ -61,7 +62,7 @@ class Element:
         )
 
         bottomside = (
-            self.pos.top > GAME_HEIGHT
+            self.pos.top > game.height
         )
 
         return (topside or bottomside)
@@ -85,8 +86,8 @@ def main():
     pg.init()
     font = pg.font.Font(None, 25)
     clock = pg.time.Clock()
-    screen = pg.display.set_mode((GAME_WIDTH, GAME_HEIGHT))
-    game_area = pg.Rect(0, 0, GAME_WIDTH, GAME_HEIGHT)
+    screen = pg.display.set_mode((game.width, game.height))
+    game_area = pg.Rect(0, 0, game.width, game.height)
     screen.fill((255, 255, 255))
 
     # setup game vars
@@ -99,7 +100,7 @@ def main():
 
     # load background image
     background_image = load_image('office-capitol.png')
-    background_image = pg.transform.scale(background_image, (GAME_WIDTH, GAME_HEIGHT))
+    background_image = pg.transform.scale(background_image, (game.width, game.height))
 
     # init player alias stromberg
     # 304 x 380
@@ -119,7 +120,7 @@ def main():
     player = ImageElement(
         image=player_image,
         speed=10,
-        top=(GAME_HEIGHT - player_image.get_height()),
+        top=(game.height - player_image.get_height()),
         left=0
     )
 
@@ -148,7 +149,7 @@ def main():
             bullet = ImageElement(
                 image=bullet_image,
                 speed=10,
-                top=(GAME_HEIGHT - player_image.get_height()),
+                top=(game.height - player_image.get_height()),
                 left=(player.pos[0] + player_image.get_width())
             )
             bullets.append(bullet)
@@ -162,7 +163,7 @@ def main():
                 image=enemie_img,   
                 speed=enemie_speed,
                 top=0,
-                left=random.randint(0, (GAME_WIDTH - enemie_img.get_width()))
+                left=random.randint(0, (game.width - enemie_img.get_width()))
             )
             enemies.append(enemie)
 
